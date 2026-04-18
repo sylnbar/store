@@ -1793,8 +1793,13 @@
         appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
       };
 
+      console.log('Firebase Config:', firebaseConfig);
+
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      
+      console.log('Auth object:', auth);
+      console.log('App initialized:', app);
 
 
       // Exporta para o escopo global para o botão do formulário funcionar
@@ -1805,6 +1810,11 @@
         const password = document.getElementById('registerPassword').value;
         
         try {
+          console.log('Parâmetros para createUserWithEmailAndPassword:');
+          console.log('Auth:', auth);
+          console.log('Email:', email);
+          console.log('Password length:', password ? password.length : 'null');
+          
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           alert("Cadastro realizado!");
           console.log("Sucesso:", userCredential.user);
