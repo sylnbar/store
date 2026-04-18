@@ -1780,10 +1780,9 @@
         <div id="chatBadge" class="chat-badge" style="display: none;">0</div>
     </div>
 
-    <!-- Firebase SDK limpo e modular -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
@@ -1797,6 +1796,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
 
+
       // Exporta para o escopo global para o botão do formulário funcionar
       window.handleRegister = async (event) => {
         if (event) event.preventDefault();
@@ -1807,6 +1807,22 @@
         try {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           alert("Cadastro realizado!");
+          console.log("Sucesso:", userCredential.user);
+        } catch (error) {
+          console.error("Erro detalhado:", error.code, error.message);
+          alert("Erro: " + error.message);
+        }
+      };
+
+      window.handleLogin = async (event) => {
+        if (event) event.preventDefault();
+        console.log("Iniciando login...");
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          alert("Login realizado!");
           console.log("Sucesso:", userCredential.user);
         } catch (error) {
           console.error("Erro detalhado:", error.code, error.message);
