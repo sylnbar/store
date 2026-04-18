@@ -1781,28 +1781,36 @@
     </div>
 
     <!-- Firebase SDK com type="module" -->
+    <script>
+        // ============ CONFIGURAÇÃO FIREBASE GLOBAL ============
+        const firebaseConfig = {
+          apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
+          authDomain: "sa-store-88b8e.firebaseapp.com",
+          projectId: "sa-store-88b8e",
+          storageBucket: "sa-store-88b8e.firebasestorage.app",
+          messagingSenderId: "1081080082108",
+          appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
+        };
+
+        // Tornar firebaseConfig global
+        window.firebaseConfig = firebaseConfig;
+    </script>
+
     <script type="module">
         // Importações do Firebase SDK v9+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ============ CONFIGURAÇÃO FIREBASE ============
-        const firebaseConfig = {
-            apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
-            authDomain: "sa-store-88b8e.firebaseapp.com",
-            projectId: "sa-store-88b8e",
-            storageBucket: "sa-store-88b8e.firebasestorage.app",
-            messagingSenderId: "1081080082108",
-            appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
-        };
+        // Usar firebaseConfig global
+        const config = window.firebaseConfig;
 
         // Inicializar Firebase com tratamento de erro
         let app, auth, db;
         
         try {
-            console.log('Inicializando Firebase com config:', firebaseConfig);
-            app = initializeApp(firebaseConfig);
+            console.log('Inicializando Firebase com config:', config);
+            app = initializeApp(config);
             auth = getAuth(app);
             db = getFirestore(app);
             
@@ -2153,7 +2161,16 @@
                 showNotification(`Conta criada com sucesso! Bem-vindo à S2 Store, ${username}!`, 'success');
                 
             } catch (error) {
-                console.error('Erro no cadastro:', error);
+                console.error('=== ERRO DETALHADO NO CADASTRO ===');
+                console.error('Error Code:', error.code);
+                console.error('Error Message:', error.message);
+                console.error('Error Stack:', error.stack);
+                console.error('Firebase Config:', config);
+                console.error('Auth Available:', !!window.firebaseAuth);
+                console.error('DB Available:', !!window.firebaseDb);
+                console.error('Firebase Ready:', window.firebaseReady);
+                console.error('=======================================');
+                
                 let errorMessage = 'Erro ao criar conta';
                 
                 if (error.code === 'auth/email-already-in-use') {
@@ -2166,11 +2183,29 @@
                     errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
                 } else if (error.code === 'auth/api-key-not-valid') {
                     errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
+                    console.error('ERRO CRÍTICO: auth/api-key-not-valid');
+                    console.error('Verifique se o projeto Firebase está ativo e as chaves estão corretas');
+                } else if (error.code === 'auth/invalid-api-key') {
+                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
+                    console.error('ERRO CRÍTICO: auth/invalid-api-key');
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
                 
                 showNotification(errorMessage, 'error');
+                
+                // Adicionar informação adicional para debug
+                if (error.code && error.code.includes('api-key')) {
+                    setTimeout(() => {
+                        console.log('=== SUGESTÕES PARA CORREÇÃO ===');
+                        console.log('1. Verifique se o projeto Firebase existe');
+                        console.log('2. Verifique se Authentication está ativado');
+                        console.log('3. Verifique se a API Key está correta');
+                        console.log('4. Verifique se não há restrições de domínio');
+                        console.log('5. Tente regenerar a chave de API');
+                        console.log('====================================');
+                    }, 1000);
+                }
             }
             
             return false;
@@ -3036,14 +3071,24 @@
             });
             
             // Initialize
-            checkAuth();
-            loadProducts();
+            // Aguardar Firebase estar pronto antes de inicializar
+            const initializeApp = () => {
+                if (window.firebaseReady) {
+                    checkAuth();
+                    loadProducts();
+                    
+                    // Check URL hash
+                    const hash = window.location.hash.substring(1);
+                    if (hash && ['home', 'products', 'orders', 'admin'].includes(hash)) {
+                        navigateTo(hash);
+                    }
+                } else {
+                    console.log('Aguardando Firebase inicializar...');
+                    setTimeout(initializeApp, 500);
+                }
+            };
             
-            // Check URL hash
-            const hash = window.location.hash.substring(1);
-            if (hash && ['home', 'products', 'orders', 'admin'].includes(hash)) {
-                navigateTo(hash);
-            }
+            initializeApp();
         });
         
         // Make functions global
