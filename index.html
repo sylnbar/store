@@ -1780,71 +1780,135 @@
         <div id="chatBadge" class="chat-badge" style="display: none;">0</div>
     </div>
 
-    <!-- Firebase SDK com type="module" -->
-    <script>
-        // ============ CONFIGURAÇÃO FIREBASE GLOBAL ============
-        const firebaseConfig = {
-          apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
-          authDomain: "sa-store-88b8e.firebaseapp.com",
-          projectId: "sa-store-88b8e",
-          storageBucket: "sa-store-88b8e.firebasestorage.app",
-          messagingSenderId: "1081080082108",
-          appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
-        };
-
-        // Tornar firebaseConfig global
-        window.firebaseConfig = firebaseConfig;
-    </script>
-
+    <!-- Firebase SDK limpo e unificado -->
     <script type="module">
-        // Importações do Firebase SDK v9+
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Usar firebaseConfig global
-        const config = window.firebaseConfig;
+      const firebaseConfig = {
+        apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
+        authDomain: "sa-store-88b8e.firebaseapp.com",
+        projectId: "sa-store-88b8e",
+        storageBucket: "sa-store-88b8e.firebasestorage.app",
+        messagingSenderId: "1081080082108",
+        appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
+      };
 
-        // Inicializar Firebase com tratamento de erro
-        let app, auth, db;
-        
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      console.log('Firebase inicializado com sucesso!');
+      console.log('Auth:', auth);
+      console.log('DB:', db);
+
+      // Tornar variáveis globais para outros scripts
+      window.firebaseAuth = auth;
+      window.firebaseDb = db;
+      window.serverTimestamp = serverTimestamp;
+      window.firebaseApp = app;
+      
+      // Funções globais do Firebase
+      window.firebaseSignIn = signInWithEmailAndPassword;
+      window.firebaseCreateUser = createUserWithEmailAndPassword;
+      window.firebaseSignOut = signOut;
+      window.firebaseOnAuthStateChanged = onAuthStateChanged;
+      window.firebaseGetDoc = getDoc;
+      window.firebaseSetDoc = setDoc;
+      window.firebaseDoc = doc;
+      
+      // Indicar que Firebase está pronto
+      window.firebaseReady = true;
+
+      // Torna a função global para o formulário HTML achar
+      window.handleRegister = async (event) => {
+        event.preventDefault();
+        console.log("Tentando cadastrar...");
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const username = document.getElementById('registerUsername').value;
+        const phone = document.getElementById('registerPhone').value;
+        const robloxUsername = document.getElementById('registerRobloxUsername').value;
+
         try {
-            console.log('Inicializando Firebase com config:', config);
-            app = initializeApp(config);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            
-            console.log('Firebase inicializado com sucesso!');
-            console.log('Auth:', auth);
-            console.log('DB:', db);
-            
-            // Tornar variáveis globais para outros scripts
-            window.firebaseAuth = auth;
-            window.firebaseDb = db;
-            window.serverTimestamp = serverTimestamp;
-            window.firebaseApp = app;
-            
-            // Funções globais do Firebase
-            window.firebaseSignIn = signInWithEmailAndPassword;
-            window.firebaseCreateUser = createUserWithEmailAndPassword;
-            window.firebaseSignOut = signOut;
-            window.firebaseOnAuthStateChanged = onAuthStateChanged;
-            window.firebaseGetDoc = getDoc;
-            window.firebaseSetDoc = setDoc;
-            window.firebaseDoc = doc;
-            
-            // Indicar que Firebase está pronto
-            window.firebaseReady = true;
-            
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          
+          // Atualizar displayName com username
+          await userCredential.user.updateProfile({
+            displayName: username
+          });
+          
+          // Salvar dados adicionais no Firestore
+          await setDoc(doc(db, 'users', userCredential.user.uid), {
+            username: username,
+            email: email,
+            phone: phone,
+            robloxUsername: robloxUsername,
+            role: 'user',
+            createdAt: serverTimestamp(),
+            lastLogin: serverTimestamp()
+          });
+          
+          alert("Cadastro realizado com sucesso!");
+          console.log("Sucesso:", userCredential.user);
+          
+          // Fechar modal e limpar formulário
+          closeModal('registerModal');
+          document.getElementById('registerForm').reset();
+          
         } catch (error) {
-            console.error('Erro ao inicializar Firebase:', error);
-            window.firebaseReady = false;
-            
-            // Mostrar erro na tela
-            if (typeof showNotification === 'function') {
-                showNotification('Erro ao inicializar Firebase: ' + error.message, 'error');
-            }
+          console.error("Erro detalhado:", error.code, error.message);
+          
+          let errorMessage = "Erro ao cadastrar";
+          if (error.code === 'auth/email-already-in-use') {
+            errorMessage = "Email já está em uso";
+          } else if (error.code === 'auth/weak-password') {
+            errorMessage = "Senha muito fraca (mínimo 6 caracteres)";
+          } else if (error.code === 'auth/invalid-email') {
+            errorMessage = "Email inválido";
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          
+          alert("Erro: " + errorMessage);
         }
+      };
+
+      window.handleLogin = async (event) => {
+        event.preventDefault();
+        console.log("Tentando fazer login...");
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          alert("Login realizado com sucesso!");
+          console.log("Sucesso:", userCredential.user);
+          
+          // Fechar modal e limpar formulário
+          closeModal('loginModal');
+          document.getElementById('loginForm').reset();
+          
+        } catch (error) {
+          console.error("Erro detalhado:", error.code, error.message);
+          
+          let errorMessage = "Email ou senha incorretos";
+          if (error.code === 'auth/user-not-found') {
+            errorMessage = "Usuário não encontrado";
+          } else if (error.code === 'auth/wrong-password') {
+            errorMessage = "Senha incorreta";
+          } else if (error.code === 'auth/invalid-email') {
+            errorMessage = "Email inválido";
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          
+          alert("Erro: " + errorMessage);
+        }
+        
+        return false;
+      };
     </script>
 
     <script>
@@ -1992,64 +2056,7 @@
             }
         }
         
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Verificar se Firebase está pronto
-            if (!window.firebaseReady) {
-                showNotification('Firebase ainda está carregando. Aguarde...', 'warning');
-                return false;
-            }
-            
-            const auth = window.firebaseAuth;
-            if (!auth) {
-                showNotification('Firebase Auth não disponível', 'error');
-                return false;
-            }
-            
-            console.log('Tentando login com:', email);
-            
-            try {
-                // Verificar admin padrão primeiro
-                if (email === 'admin@s2store.com' && password === 'admin123') {
-                    // Criar ou fazer login como admin
-                    await signInOrCreateAdmin();
-                } else {
-                    // Login normal com Firebase Auth
-                    const userCredential = await window.firebaseSignIn(auth, email, password);
-                    console.log('Login realizado com sucesso:', userCredential.user);
-                    showNotification('Login realizado com sucesso!', 'success');
-                }
-                
-                closeModal('loginModal');
-                document.getElementById('loginForm').reset();
-                
-            } catch (error) {
-                console.error('Erro no login:', error);
-                let errorMessage = 'Email ou senha incorretos';
-                
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = 'Usuário não encontrado';
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = 'Senha incorreta';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Email inválido';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
-                } else if (error.code === 'auth/api-key-not-valid') {
-                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
-                } else if (error.message) {
-                    errorMessage = error.message;
-                }
-                
-                showNotification(errorMessage, 'error');
-            }
-            
-            return false;
-        }
+        // handleLogin já foi definido no módulo principal
         
         async function signInOrCreateAdmin() {
             const auth = window.firebaseAuth;
@@ -2100,116 +2107,7 @@
             }
         }
         
-        async function handleRegister(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const phone = document.getElementById('registerPhone').value;
-            const robloxUsername = document.getElementById('registerRobloxUsername').value;
-            
-            // Verificar se Firebase está pronto
-            if (!window.firebaseReady) {
-                showNotification('Firebase ainda está carregando. Aguarde...', 'warning');
-                return false;
-            }
-            
-            const auth = window.firebaseAuth;
-            const db = window.firebaseDb;
-            
-            if (!auth || !db) {
-                showNotification('Firebase não inicializado corretamente', 'error');
-                return false;
-            }
-            
-            if (!username || !email || !password) {
-                showNotification('Preencha todos os campos obrigatórios!', 'error');
-                return false;
-            }
-            
-            console.log('Tentando cadastro com:', email, username);
-            
-            try {
-                // Criar usuário no Firebase Auth
-                const userCredential = await window.firebaseCreateUser(auth, email, password);
-                const user = userCredential.user;
-                
-                console.log('Usuário criado com sucesso:', user);
-                
-                // Atualizar displayName com username
-                await user.updateProfile({
-                    displayName: username
-                });
-                
-                // Salvar dados adicionais no Firestore
-                await window.firebaseSetDoc(window.firebaseDoc(db, 'users', user.uid), {
-                    username: username,
-                    email: email,
-                    phone: phone,
-                    robloxUsername: robloxUsername,
-                    role: 'user',
-                    createdAt: window.serverTimestamp(),
-                    lastLogin: window.serverTimestamp()
-                });
-                
-                console.log('Dados salvos no Firestore');
-                
-                closeModal('registerModal');
-                document.getElementById('registerForm').reset();
-                
-                showNotification(`Conta criada com sucesso! Bem-vindo à S2 Store, ${username}!`, 'success');
-                
-            } catch (error) {
-                console.error('=== ERRO DETALHADO NO CADASTRO ===');
-                console.error('Error Code:', error.code);
-                console.error('Error Message:', error.message);
-                console.error('Error Stack:', error.stack);
-                console.error('Firebase Config:', config);
-                console.error('Auth Available:', !!window.firebaseAuth);
-                console.error('DB Available:', !!window.firebaseDb);
-                console.error('Firebase Ready:', window.firebaseReady);
-                console.error('=======================================');
-                
-                let errorMessage = 'Erro ao criar conta';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'Email já está em uso';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Email inválido';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Senha muito fraca (mínimo 6 caracteres)';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
-                } else if (error.code === 'auth/api-key-not-valid') {
-                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
-                    console.error('ERRO CRÍTICO: auth/api-key-not-valid');
-                    console.error('Verifique se o projeto Firebase está ativo e as chaves estão corretas');
-                } else if (error.code === 'auth/invalid-api-key') {
-                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
-                    console.error('ERRO CRÍTICO: auth/invalid-api-key');
-                } else if (error.message) {
-                    errorMessage = error.message;
-                }
-                
-                showNotification(errorMessage, 'error');
-                
-                // Adicionar informação adicional para debug
-                if (error.code && error.code.includes('api-key')) {
-                    setTimeout(() => {
-                        console.log('=== SUGESTÕES PARA CORREÇÃO ===');
-                        console.log('1. Verifique se o projeto Firebase existe');
-                        console.log('2. Verifique se Authentication está ativado');
-                        console.log('3. Verifique se a API Key está correta');
-                        console.log('4. Verifique se não há restrições de domínio');
-                        console.log('5. Tente regenerar a chave de API');
-                        console.log('====================================');
-                    }, 1000);
-                }
-            }
-            
-            return false;
-        }
+        // handleRegister já foi definido no módulo principal
         
         async function logout() {
             const auth = window.firebaseAuth;
@@ -3099,8 +2997,7 @@
         window.showRegisterModal = showRegisterModal;
         window.showAddProductModal = showAddProductModal;
         window.closeModal = closeModal;
-        window.handleLogin = handleLogin;
-        window.handleRegister = handleRegister;
+        // handleLogin e handleRegister já foram definidos no módulo principal
         window.logout = logout;
         window.showProductDetails = showProductDetails;
         window.handlePurchase = handlePurchase;
