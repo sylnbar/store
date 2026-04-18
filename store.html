@@ -1,0 +1,3077 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2 Store - Completo e Funcional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #ff6600;
+            --secondary-color: #ff8800;
+            --accent-color: #ff9900;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #ffcc99;
+            --text-muted: #ff9966;
+            --border-color: #404040;
+            --success-color: #90ee90;
+            --error-color: #ff6b6b;
+            --warning-color: #ffd700;
+            --gradient-1: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-2: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            --shadow-lg: 0 20px 25px -5px rgba(255, 102, 0, 0.3), 0 10px 10px -5px rgba(255, 102, 0, 0.2);
+            --shadow-xl: 0 25px 50px -12px rgba(255, 102, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 0, 17, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-logo-text {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-logo-s2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .nav-logo-store {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-logo i {
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border-radius: 25px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.2);
+        }
+
+        .btn-large {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 4rem 0;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255, 102, 0, 0.15) 0%, transparent 70%);
+        }
+
+        .hero-logo {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 2rem;
+            background: var(--gradient-1);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo-main {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .logo-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-s2 {
+            font-size: 5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: -2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .logo-store {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 102, 0, 0.8);
+            }
+            to {
+                text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 102, 0, 1), 0 0 40px rgba(255, 102, 0, 0.8);
+            }
+        }
+
+        .logo-tagline {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            color: white;
+            opacity: 0.9;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+        }
+
+        .floating-items {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .floating-items i {
+            position: absolute;
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-items i:nth-child(1) { top: 15%; left: 25%; animation-delay: 0s; }
+        .floating-items i:nth-child(2) { top: 55%; left: 65%; animation-delay: 1s; }
+        .floating-items i:nth-child(3) { top: 35%; left: 75%; animation-delay: 2s; }
+        .floating-items i:nth-child(4) { top: 75%; left: 35%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Products Section */
+        .products {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-align: center;
+            flex: 1;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .filter-select {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.2);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: var(--bg-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 2rem;
+        }
+
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .stock {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .modal-large {
+            max-width: 800px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .modal-logo-text {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .modal-logo-s2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            animation: modalGlow 2s ease-in-out infinite alternate;
+        }
+
+        .modal-logo-store {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+            animation: modalGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes modalGlow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(255, 102, 0, 0.8));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(255, 102, 0, 1));
+            }
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content form {
+            padding: 1rem 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+        }
+
+        .form-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .form-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .form-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Product Details */
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .product-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .product-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* PIX Payment */
+        .pix-section {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .pix-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #333;
+        }
+
+        .pix-code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 1rem 0;
+        }
+
+        .pix-instructions {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Orders */
+        .orders {
+            padding: 4rem 0;
+        }
+
+        .orders-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .order-info h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-paid {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--primary-color);
+        }
+
+        .status-processing {
+            background: rgba(255, 20, 147, 0.2);
+            color: var(--primary-color);
+        }
+
+        .status-delivered {
+            background: rgba(144, 238, 144, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-cancelled {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--error-color);
+        }
+
+        /* Admin Section */
+        .admin-section {
+            padding: 4rem 0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 3000;
+            max-width: 400px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        .notification.success {
+            border-color: var(--success-color);
+        }
+
+        .notification.error {
+            border-color: var(--error-color);
+        }
+
+        .notification.warning {
+            border-color: var(--warning-color);
+        }
+
+        .notification-icon {
+            font-size: 1.25rem;
+        }
+
+        .notification.success .notification-icon {
+            color: var(--success-color);
+        }
+
+        .notification.error .notification-icon {
+            color: var(--error-color);
+        }
+
+        .notification.warning .notification-icon {
+            color: var(--warning-color);
+        }
+
+        /* Chat System */
+        .chat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .chat-modal.active {
+            display: flex;
+        }
+
+        .chat-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--success-color);
+        }
+
+        .chat-status .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: var(--gradient-1);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message.admin {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border: 1px solid var(--border-color);
+        }
+
+        .message-info {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .chat-input button {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+        }
+
+        .chat-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Chat Button */
+        .chat-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.3s ease;
+            z-index: 2500;
+        }
+
+        .chat-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 20, 147, 0.4);
+        }
+
+        .chat-button i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Admin Orders Table */
+        .orders-table {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1.5fr 1.5fr;
+            gap: 1rem;
+            padding: 1rem;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-header .table-row {
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table-body .table-row:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .client-roblox {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .product-info .product-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .price-info {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .date-info {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .actions-info {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 8px;
+        }
+
+        .btn-small i {
+            font-size: 0.75rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .search-bar input {
+                width: 150px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .hero-bg {
+                display: none;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filters {
+                width: 100%;
+            }
+            
+            .filter-select {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .admin-tabs {
+                overflow-x: auto;
+            }
+            
+            .order-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .d-none { display: none; }
+        .d-block { display: block; }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .p-2 { padding: 1rem; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <div class="nav-logo-text">
+                        <span class="nav-logo-s2">S2</span>
+                        <span class="nav-logo-store">STORE</span>
+                    </div>
+                    <i class="fas fa-store"></i>
+                </div>
+                
+                <div class="nav-menu">
+                    <a href="#home" class="nav-link active" onclick="navigateTo('home')">Início</a>
+                    <a href="#products" class="nav-link" onclick="navigateTo('products')">Produtos</a>
+                    <a href="#orders" class="nav-link" onclick="navigateTo('orders')">Meus Pedidos</a>
+                    <a href="#admin" class="nav-link admin-only" style="display: none;" onclick="navigateTo('admin')">Painel Admin</a>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Buscar itens..." onkeyup="handleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button id="loginBtn" class="btn btn-primary" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Entrar
+                    </button>
+                    <button id="userBtn" class="btn btn-secondary" style="display: none;">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Usuário</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-logo">
+                <div class="logo-container">
+                    <div class="logo-main">
+                        <div class="logo-text">
+                            <span class="logo-s2">S2</span>
+                            <span class="logo-store">STORE</span>
+                        </div>
+                        <div class="logo-tagline">Itens Premium</div>
+                    </div>
+                    <div class="logo-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-content">
+                <h1>Compre Game Passes, Assets e Roupas</h1>
+                <p>Pagamento PIX rápido e entrega manual confiável</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="scrollToProducts()">
+                        <i class="fas fa-shopping-cart"></i>
+                        Ver Produtos
+                    </button>
+                    <button class="btn btn-secondary btn-large" onclick="showHowItWorks()">
+                        <i class="fas fa-info-circle"></i>
+                        Como Funciona
+                    </button>
+                </div>
+            </div>
+            <div class="hero-bg">
+                <div class="floating-items">
+                    <i class="fas fa-crown"></i>
+                    <i class="fas fa-gem"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-trophy"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="products">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Produtos Disponíveis</h2>
+                    <div class="filters">
+                        <select id="categoryFilter" class="filter-select" onchange="filterProducts()">
+                            <option value="">Todas Categorias</option>
+                            <option value="gamepass">Game Pass</option>
+                            <option value="asset">Asset</option>
+                            <option value="clothing">Roupas</option>
+                            <option value="accessory">Acessórios</option>
+                        </select>
+                        <select id="sortFilter" class="filter-select" onchange="sortProducts()">
+                            <option value="newest">Mais Novos</option>
+                            <option value="price-low">Menor Preço</option>
+                            <option value="price-high">Maior Preço</option>
+                            <option value="name">Nome A-Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="productsGrid" class="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="orders" class="orders" style="display: none;">
+            <div class="container">
+                <h2>Meus Pedidos</h2>
+                <div id="ordersList" class="orders-list">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin" class="admin-section" style="display: none;">
+            <div class="container">
+                <div class="admin-header">
+                    <h2>Painel Administrativo</h2>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i>
+                            Adicionar Produto
+                        </button>
+                        <button class="btn btn-secondary" onclick="refreshStats()">
+                            <i class="fas fa-sync"></i>
+                            Atualizar Estatísticas
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-box"></i>
+                        <h3 id="totalProducts">3</h3>
+                        <p>Total de Produtos</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total de Pedidos</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="totalUsers">1</h3>
+                        <p>Total de Usuários</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3 id="totalRevenue">R$ 0</h3>
+                        <p>Receita Total</p>
+                    </div>
+                </div>
+
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchAdminTab('products')">Produtos</button>
+                    <button class="tab-btn" onclick="switchAdminTab('orders')">Pedidos</button>
+                    <button class="tab-btn" onclick="switchAdminTab('users')">Usuários</button>
+                </div>
+
+                <div class="admin-content">
+                    <div id="productsTab" class="tab-content active">
+                        <div class="admin-products">
+                            <!-- Admin products list -->
+                        </div>
+                    </div>
+                    <div id="ordersTab" class="tab-content">
+                        <div class="admin-orders">
+                            <!-- Admin orders list -->
+                        </div>
+                    </div>
+                    <div id="usersTab" class="tab-content">
+                        <div class="admin-users">
+                            <!-- Admin users list -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <div class="modal-logo-text">
+                        <span class="modal-logo-s2">S2</span>
+                        <span class="modal-logo-store">STORE</span>
+                    </div>
+                </div>
+                <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <p class="form-link">
+                    Não tem conta? <a href="#" onclick="showRegisterModal()">Cadastre-se</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <div class="modal-logo-text">
+                        <span class="modal-logo-s2">S2</span>
+                        <span class="modal-logo-store">STORE</span>
+                    </div>
+                </div>
+                <button class="close-modal" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form id="registerForm" onsubmit="return handleRegister(event)">
+                <div class="form-group">
+                    <label>Nome de Usuário</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefone (para PIX)</label>
+                    <input type="tel" id="registerPhone" placeholder="(DDD) 00000-0000">
+                </div>
+                <div class="form-group">
+                    <label>Usuário Roblox</label>
+                    <input type="text" id="registerRobloxUsername">
+                </div>
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                <p class="form-link">
+                    Já tem conta? <a href="#" onclick="showLoginModal()">Faça login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Produto</h3>
+                <button class="close-modal" onclick="closeModal('productModal')">&times;</button>
+            </div>
+            <div class="product-details">
+                <div class="product-image">
+                    <img id="productModalImage" src="" alt="">
+                </div>
+                <div class="product-info">
+                    <h3 id="productModalName"></h3>
+                    <p id="productModalDescription"></p>
+                    <div class="product-meta">
+                        <span class="price" id="productModalPrice"></span>
+                        <span class="stock" id="productModalStock">Sob consulta</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Seu Usuário Roblox</label>
+                        <input type="text" id="purchaseRobloxUsername" required>
+                    </div>
+                    <button id="purchaseBtn" class="btn btn-primary btn-large" onclick="handlePurchase()">
+                        <i class="fas fa-shopping-cart"></i>
+                        Comprar Agora
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pixModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Pagamento PIX</h3>
+                <button class="close-modal" onclick="closeModal('pixModal')">&times;</button>
+            </div>
+            <div class="pix-section">
+                <h3>Escaneie o QR Code ou copie o código PIX</h3>
+                <div class="pix-qr">
+                    QR Code PIX (Simulado)
+                </div>
+                <div class="pix-code" id="pixCode">00020126580014BR.GOV.BCB.PIX01234567890205seu-chave-pix@email.com5204000053039865406100.005802BR5913Roblox Store62070503***6304</div>
+                <div class="pix-instructions">
+                    <p><strong>Instruções:</strong></p>
+                    <p>1. Escaneie o QR Code com seu app bancário</p>
+                    <p>2. Ou copie o código PIX e cole no app</p>
+                    <p>3. Após o pagamento, envie o comprovante para o admin</p>
+                    <p>4. Aguarde a entrega manual do item</p>
+                </div>
+                <button class="btn btn-primary" onclick="sendPixProof()">
+                    <i class="fas fa-paper-plane"></i>
+                    Confirmar Pagamento
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addProductModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Adicionar Produto</h3>
+                <button class="close-modal" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <input type="text" id="newProductName" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="newProductDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URL da Imagem</label>
+                    <input type="url" id="newProductImage" required>
+                </div>
+                <div class="form-group">
+                    <label>Preço (R$)</label>
+                    <input type="number" id="newProductPrice" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="newProductCategory" required>
+                        <option value="gamepass">Game Pass</option>
+                        <option value="asset">Asset</option>
+                        <option value="clothing">Roupas</option>
+                        <option value="accessory">Acessórios</option>
+                        <option value="other">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ID do Roblox (Opcional)</label>
+                    <input type="text" id="newProductRobloxId">
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <i class="notification-icon"></i>
+            <span class="notification-message"></span>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>Chat S2 Store</h3>
+                <div class="chat-status">
+                    <div class="status-dot"></div>
+                    <span>Admin Online</span>
+                </div>
+                <button class="close-modal" onclick="closeChatModal()">&times;</button>
+            </div>
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be loaded here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+                <button onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Button -->
+    <div id="chatButton" class="chat-button" style="display: none;" onclick="openChatModal()">
+        <i class="fas fa-comments"></i>
+        <div id="chatBadge" class="chat-badge" style="display: none;">0</div>
+    </div>
+
+    <!-- Firebase SDK com type="module" -->
+    <script type="module">
+        // Importações do Firebase SDK v9+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ============ CONFIGURAÇÃO FIREBASE ============
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs2raBWwKqQ6cXxc0Yfz0ArovxGLNM11g",
+            authDomain: "sa-store-88b8e.firebaseapp.com",
+            projectId: "sa-store-88b8e",
+            storageBucket: "sa-store-88b8e.firebasestorage.app",
+            messagingSenderId: "1081080082108",
+            appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
+        };
+
+        // Inicializar Firebase com tratamento de erro
+        let app, auth, db;
+        
+        try {
+            console.log('Inicializando Firebase com config:', firebaseConfig);
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            
+            console.log('Firebase inicializado com sucesso!');
+            console.log('Auth:', auth);
+            console.log('DB:', db);
+            
+            // Tornar variáveis globais para outros scripts
+            window.firebaseAuth = auth;
+            window.firebaseDb = db;
+            window.serverTimestamp = serverTimestamp;
+            window.firebaseApp = app;
+            
+            // Funções globais do Firebase
+            window.firebaseSignIn = signInWithEmailAndPassword;
+            window.firebaseCreateUser = createUserWithEmailAndPassword;
+            window.firebaseSignOut = signOut;
+            window.firebaseOnAuthStateChanged = onAuthStateChanged;
+            window.firebaseGetDoc = getDoc;
+            window.firebaseSetDoc = setDoc;
+            window.firebaseDoc = doc;
+            
+            // Indicar que Firebase está pronto
+            window.firebaseReady = true;
+            
+        } catch (error) {
+            console.error('Erro ao inicializar Firebase:', error);
+            window.firebaseReady = false;
+            
+            // Mostrar erro na tela
+            if (typeof showNotification === 'function') {
+                showNotification('Erro ao inicializar Firebase: ' + error.message, 'error');
+            }
+        }
+    </script>
+
+    <script>
+        // ============ CONFIGURAÇÃO ============
+        
+        // Estado global (salvo em localStorage e Firebase)
+        let currentUser = null;
+        let products = [];
+        let orders = [];
+        let selectedProduct = null;
+        let currentOrder = null;
+        let filteredProducts = [];
+        let chatMessages = [];
+        let currentChatRoom = null;
+        let unreadMessages = 0;
+        
+        // ============ UTILITÁRIOS ============
+        function showNotification(message, type = 'info', duration = 5000) {
+            const notification = document.getElementById('notification');
+            const iconElement = notification.querySelector('.notification-icon');
+            const messageElement = notification.querySelector('.notification-message');
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            iconElement.className = `notification-icon ${icons[type] || icons.info}`;
+            messageElement.textContent = message;
+            
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(amount);
+        }
+        
+        function formatDate(date) {
+            return new Intl.DateTimeFormat('pt-BR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(new Date(date));
+        }
+        
+        // ============ STORAGE ============
+        function saveToLocalStorage(key, data) {
+            localStorage.setItem('s2-store-' + key, JSON.stringify(data));
+        }
+        
+        function loadFromLocalStorage(key, defaultValue = []) {
+            const data = localStorage.getItem('s2-store-' + key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+        
+        // ============ AUTENTICAÇÃO COM FIREBASE ============
+        function checkAuth() {
+            // Verificar se Firebase está pronto
+            if (!window.firebaseReady) {
+                console.error('Firebase não está pronto. Aguardando inicialização...');
+                // Tentar novamente após um delay
+                setTimeout(checkAuth, 1000);
+                return;
+            }
+            
+            // Verificar se há usuário logado no Firebase
+            const auth = window.firebaseAuth;
+            if (!auth) {
+                console.error('Firebase Auth não inicializado');
+                showNotification('Erro: Firebase Auth não disponível', 'error');
+                return;
+            }
+            
+            console.log('Verificando estado de autenticação...');
+            window.firebaseOnAuthStateChanged(auth, (user) => {
+                console.log('Estado de autenticação mudou:', user);
+                if (user) {
+                    // Usuário está logado, carregar dados do Firestore
+                    loadUserData(user.uid, user);
+                } else {
+                    // Usuário não está logado
+                    currentUser = null;
+                    updateAuthUI();
+                }
+            });
+        }
+        
+        async function loadUserData(uid, firebaseUser) {
+            try {
+                const db = window.firebaseDb;
+                const userDoc = await window.firebaseGetDoc(window.firebaseDoc(db, 'users', uid));
+                
+                if (userDoc.exists()) {
+                    currentUser = {
+                        uid: uid,
+                        ...userDoc.data()
+                    };
+                    updateAuthUI();
+                    showNotification(`Bem-vindo de volta, ${currentUser.username}!`, 'success');
+                } else {
+                    // Se não encontrar no Firestore, criar documento básico
+                    currentUser = {
+                        uid: uid,
+                        username: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        role: 'user'
+                    };
+                    updateAuthUI();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do usuário:', error);
+                showNotification('Erro ao carregar dados do usuário', 'error');
+            }
+        }
+        
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const userBtn = document.getElementById('userBtn');
+            const userName = document.getElementById('userName');
+            const adminLink = document.querySelector('.admin-only');
+            
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+                userBtn.style.display = 'flex';
+                userName.textContent = currentUser.username;
+                
+                if (currentUser.role === 'admin') {
+                    adminLink.style.display = 'block';
+                }
+            } else {
+                loginBtn.style.display = 'flex';
+                userBtn.style.display = 'none';
+                adminLink.style.display = 'none';
+            }
+        }
+        
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Verificar se Firebase está pronto
+            if (!window.firebaseReady) {
+                showNotification('Firebase ainda está carregando. Aguarde...', 'warning');
+                return false;
+            }
+            
+            const auth = window.firebaseAuth;
+            if (!auth) {
+                showNotification('Firebase Auth não disponível', 'error');
+                return false;
+            }
+            
+            console.log('Tentando login com:', email);
+            
+            try {
+                // Verificar admin padrão primeiro
+                if (email === 'admin@s2store.com' && password === 'admin123') {
+                    // Criar ou fazer login como admin
+                    await signInOrCreateAdmin();
+                } else {
+                    // Login normal com Firebase Auth
+                    const userCredential = await window.firebaseSignIn(auth, email, password);
+                    console.log('Login realizado com sucesso:', userCredential.user);
+                    showNotification('Login realizado com sucesso!', 'success');
+                }
+                
+                closeModal('loginModal');
+                document.getElementById('loginForm').reset();
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                let errorMessage = 'Email ou senha incorretos';
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'Usuário não encontrado';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Senha incorreta';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Email inválido';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
+                } else if (error.code === 'auth/api-key-not-valid') {
+                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                showNotification(errorMessage, 'error');
+            }
+            
+            return false;
+        }
+        
+        async function signInOrCreateAdmin() {
+            const auth = window.firebaseAuth;
+            const db = window.firebaseDb;
+            
+            try {
+                // Tentar fazer login como admin
+                await window.firebaseSignIn(auth, 'admin@s2store.com', 'admin123');
+                
+                // Se não existir, criar
+                const user = auth.currentUser;
+                await window.firebaseSetDoc(window.firebaseDoc(db, 'users', user.uid), {
+                    username: 'admin',
+                    email: 'admin@s2store.com',
+                    role: 'admin',
+                    robloxUsername: 'admin_roblox',
+                    phone: '11999999999',
+                    createdAt: window.serverTimestamp(),
+                    lastLogin: window.serverTimestamp()
+                }, { merge: true });
+                
+                showNotification('Login realizado com sucesso! Bem-vindo, admin!', 'success');
+                
+            } catch (error) {
+                if (error.code === 'auth/user-not-found') {
+                    // Criar usuário admin
+                    const userCredential = await window.firebaseCreateUser(auth, 'admin@s2store.com', 'admin123');
+                    const user = userCredential.user;
+                    
+                    await user.updateProfile({
+                        displayName: 'admin'
+                    });
+                    
+                    await window.firebaseSetDoc(window.firebaseDoc(db, 'users', user.uid), {
+                        username: 'admin',
+                        email: 'admin@s2store.com',
+                        role: 'admin',
+                        robloxUsername: 'admin_roblox',
+                        phone: '11999999999',
+                        createdAt: window.serverTimestamp(),
+                        lastLogin: window.serverTimestamp()
+                    });
+                    
+                    showNotification('Usuário admin criado e logado com sucesso!', 'success');
+                } else {
+                    throw error;
+                }
+            }
+        }
+        
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const phone = document.getElementById('registerPhone').value;
+            const robloxUsername = document.getElementById('registerRobloxUsername').value;
+            
+            // Verificar se Firebase está pronto
+            if (!window.firebaseReady) {
+                showNotification('Firebase ainda está carregando. Aguarde...', 'warning');
+                return false;
+            }
+            
+            const auth = window.firebaseAuth;
+            const db = window.firebaseDb;
+            
+            if (!auth || !db) {
+                showNotification('Firebase não inicializado corretamente', 'error');
+                return false;
+            }
+            
+            if (!username || !email || !password) {
+                showNotification('Preencha todos os campos obrigatórios!', 'error');
+                return false;
+            }
+            
+            console.log('Tentando cadastro com:', email, username);
+            
+            try {
+                // Criar usuário no Firebase Auth
+                const userCredential = await window.firebaseCreateUser(auth, email, password);
+                const user = userCredential.user;
+                
+                console.log('Usuário criado com sucesso:', user);
+                
+                // Atualizar displayName com username
+                await user.updateProfile({
+                    displayName: username
+                });
+                
+                // Salvar dados adicionais no Firestore
+                await window.firebaseSetDoc(window.firebaseDoc(db, 'users', user.uid), {
+                    username: username,
+                    email: email,
+                    phone: phone,
+                    robloxUsername: robloxUsername,
+                    role: 'user',
+                    createdAt: window.serverTimestamp(),
+                    lastLogin: window.serverTimestamp()
+                });
+                
+                console.log('Dados salvos no Firestore');
+                
+                closeModal('registerModal');
+                document.getElementById('registerForm').reset();
+                
+                showNotification(`Conta criada com sucesso! Bem-vindo à S2 Store, ${username}!`, 'success');
+                
+            } catch (error) {
+                console.error('Erro no cadastro:', error);
+                let errorMessage = 'Erro ao criar conta';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Email já está em uso';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Email inválido';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Senha muito fraca (mínimo 6 caracteres)';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
+                } else if (error.code === 'auth/api-key-not-valid') {
+                    errorMessage = 'Chave de API inválida. Verifique as configurações do Firebase.';
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                showNotification(errorMessage, 'error');
+            }
+            
+            return false;
+        }
+        
+        async function logout() {
+            const auth = window.firebaseAuth;
+            
+            if (!auth) {
+                showNotification('Firebase não inicializado', 'error');
+                return;
+            }
+            
+            try {
+                await window.firebaseSignOut(auth);
+                currentUser = null;
+                updateAuthUI();
+                
+                // Hide admin section
+                document.getElementById('admin').style.display = 'none';
+                
+                // Show home section
+                document.getElementById('home').style.display = 'block';
+                document.getElementById('products').style.display = 'block';
+                document.getElementById('orders').style.display = 'none';
+                
+                showNotification('Logout realizado com sucesso', 'info');
+            } catch (error) {
+                console.error('Erro no logout:', error);
+                showNotification('Erro ao fazer logout', 'error');
+            }
+        }
+        
+        // ============ PRODUTOS ============
+        function loadProducts() {
+            // Produtos iniciais
+            const defaultProducts = [
+                {
+                    id: 'prod1',
+                    name: 'Espada Lendária',
+                    description: 'Espada poderosa com ataque crítico aumentado e efeitos visuais únicos',
+                    image: 'https://via.placeholder.com/400x300/ff1493/ffffff?text=ESPADA',
+                    price: 89.99,
+                    category: 'asset',
+                    robloxId: '1234567890',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'prod2',
+                    name: 'Skin Exclusiva Dragon',
+                    description: 'Skin rara de dragão para seu personagem com animações especiais',
+                    image: 'https://via.placeholder.com/400x300/ff69b4/ffffff?text=DRAGON',
+                    price: 49.99,
+                    category: 'clothing',
+                    robloxId: '0987654321',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'prod3',
+                    name: 'Cape de Herói',
+                    description: 'Capa especial com efeitos visuais únicos e partículas brilhantes',
+                    image: 'https://via.placeholder.com/400x300/ff6eb4/ffffff?text=CAPE',
+                    price: 34.99,
+                    category: 'clothing',
+                    robloxId: '1111111111',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            
+            // Carregar produtos do localStorage
+            products = loadFromLocalStorage('products', defaultProducts);
+            
+            // Se não tiver produtos, usar os padrão
+            if (products.length === 0) {
+                products = defaultProducts;
+                saveToLocalStorage('products', products);
+            }
+            
+            filteredProducts = products;
+            renderProducts();
+        }
+        
+        function renderProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            
+            if (filteredProducts.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="text-center" style="grid-column: 1 / -1;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-secondary);">Nenhum produto encontrado</h3>
+                        <p style="color: var(--text-muted);">Tente ajustar os filtros ou buscar por outro termo</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            productsGrid.innerHTML = filteredProducts.map(product => `
+                <div class="product-card fade-in" onclick="showProductDetails('${product.id}')">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" 
+                         onerror="this.src='https://via.placeholder.com/300x200/2a2a2a/666666?text=Sem+Imagem'">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-meta">
+                            <span class="price">${formatCurrency(product.price)}</span>
+                        </div>
+                        <div class="stock">Sob consulta</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function showProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            selectedProduct = product;
+            
+            document.getElementById('productModalTitle').textContent = product.name;
+            document.getElementById('productModalImage').src = product.image;
+            document.getElementById('productModalName').textContent = product.name;
+            document.getElementById('productModalDescription').textContent = product.description;
+            document.getElementById('productModalPrice').textContent = formatCurrency(product.price);
+            document.getElementById('productModalStock').textContent = 'Sob consulta';
+            
+            // Pre-fill Roblox username
+            const robloxUsernameInput = document.getElementById('purchaseRobloxUsername');
+            if (currentUser && currentUser.robloxUsername) {
+                robloxUsernameInput.value = currentUser.robloxUsername;
+            }
+            
+            showModal('productModal');
+        }
+        
+        function handlePurchase() {
+            if (!currentUser) {
+                showNotification('Faça login para comprar', 'warning');
+                showLoginModal();
+                return;
+            }
+            
+            if (!selectedProduct) {
+                showNotification('Nenhum produto selecionado', 'error');
+                return;
+            }
+            
+            const robloxUsername = document.getElementById('purchaseRobloxUsername').value.trim();
+            
+            if (!robloxUsername) {
+                showNotification('Informe seu usuário Roblox', 'warning');
+                return;
+            }
+            
+            // Criar pedido
+            currentOrder = {
+                id: 'order' + Date.now(),
+                user: currentUser.id,
+                product: selectedProduct.id,
+                price: selectedProduct.price,
+                robloxUsername: robloxUsername,
+                pixCode: '00020126580014BR.GOV.BCB.PIX01234567890205seu-chave-pix@email.com5204000053039865406' + selectedProduct.price.toFixed(2).replace('.', '') + '5802BR5913Roblox Store62070503***6304',
+                pixQrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhzDwACwAG/B6RIrMAAAAASUVORK5CYII=',
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            closeModal('productModal');
+            
+            // Mostrar modal PIX
+            document.getElementById('pixCode').textContent = currentOrder.pixCode;
+            showModal('pixModal');
+            
+            showNotification('Pedido criado! Pague via PIX para continuar.', 'success');
+        }
+        
+        function sendPixProof() {
+            if (!currentOrder) {
+                showNotification('Nenhum pedido em andamento', 'error');
+                return;
+            }
+            
+            // Simular envio de comprovante
+            currentOrder.status = 'paid';
+            currentOrder.paidAt = new Date().toISOString();
+            
+            // Salvar pedido
+            orders = loadFromLocalStorage('orders', []);
+            orders.push(currentOrder);
+            saveToLocalStorage('orders', orders);
+            
+            closeModal('pixModal');
+            
+            // Abrir chat automaticamente após confirmação de pagamento
+            openChatWithOrder(currentOrder);
+            
+            showNotification('Comprovante enviado! Chat aberto com o admin para confirmar entrega.', 'success');
+            
+            // Reload orders if on orders page
+            if (document.getElementById('orders').style.display !== 'none') {
+                loadOrders();
+            }
+        }
+        
+        function filterProducts() {
+            const category = document.getElementById('categoryFilter').value;
+            
+            if (category) {
+                filteredProducts = products.filter(p => p.category === category);
+            } else {
+                filteredProducts = products;
+            }
+            
+            renderProducts();
+        }
+        
+        function sortProducts() {
+            const sort = document.getElementById('sortFilter').value;
+            
+            switch (sort) {
+                case 'price-low':
+                    filteredProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    filteredProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name':
+                    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'newest':
+                default:
+                    filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+            }
+            
+            renderProducts();
+        }
+        
+        function handleSearch() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (search) {
+                filteredProducts = products.filter(p => 
+                    p.name.toLowerCase().includes(search) || 
+                    p.description.toLowerCase().includes(search)
+                );
+            } else {
+                filterProducts();
+            }
+            
+            renderProducts();
+        }
+        
+        // ============ PEDIDOS ============
+        function loadOrders() {
+            orders = loadFromLocalStorage('orders', []);
+            renderOrders();
+        }
+        
+        function renderOrders() {
+            const ordersList = document.getElementById('ordersList');
+            
+            const userOrders = orders.filter(order => order.user === currentUser.id);
+            
+            if (userOrders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-secondary);">Nenhum pedido encontrado</h3>
+                        <p style="color: var(--text-muted);">Você ainda não fez nenhuma compra</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersList.innerHTML = userOrders.map(order => {
+                const product = products.find(p => p.id === order.product);
+                return `
+                    <div class="order-card fade-in">
+                        <div class="order-info">
+                            <h4>${product ? product.name : 'Produto não encontrado'}</h4>
+                            <div class="order-meta">
+                                <span><i class="fas fa-tag"></i> Sob consulta</span>
+                                <span><i class="fas fa-user"></i> ${order.robloxUsername}</span>
+                                <span><i class="fas fa-calendar"></i> ${formatDate(order.createdAt)}</span>
+                            </div>
+                            <div class="order-price">
+                                <strong>${formatCurrency(order.price)}</strong>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getOrderStatusText(status) {
+            const statusMap = {
+                pending: 'Aguardando PIX',
+                paid: 'Pago',
+                processing: 'Processando',
+                delivered: 'Entregue',
+                cancelled: 'Cancelado'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // ============ ADMIN ============
+        function refreshStats() {
+            const totalProducts = products.length;
+            const totalOrders = orders.length;
+            const users = loadFromLocalStorage('users', []);
+            const totalUsers = users.length;
+            const deliveredOrders = orders.filter(o => o.status === 'delivered');
+            const totalRevenue = deliveredOrders.reduce((sum, order) => sum + order.price, 0);
+            
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+            
+            showNotification('Estatísticas atualizadas!', 'success');
+        }
+        
+        function switchAdminTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(tab)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}Tab`).classList.add('active');
+            
+            // Load tab content
+            if (tab === 'products') {
+                loadAdminProducts();
+            } else if (tab === 'orders') {
+                loadAdminOrders();
+            } else if (tab === 'users') {
+                loadAdminUsers();
+            }
+        }
+        
+        function loadAdminProducts() {
+            const container = document.querySelector('.admin-products');
+            container.innerHTML = `
+                <div class="text-center">
+                    <p style="color: var(--text-secondary);">Use o formulário "Adicionar Produto" para novos itens</p>
+                </div>
+            `;
+        }
+        
+        function loadAdminOrders() {
+            const container = document.querySelector('.admin-orders');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center">
+                        <p style="color: var(--text-secondary);">Nenhum pedido encontrado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="orders-table">
+                    <div class="table-header">
+                        <div class="table-row">
+                            <div>Cliente</div>
+                            <div>Produto</div>
+                            <div>Valor</div>
+                            <div>Status</div>
+                            <div>Data</div>
+                            <div>Ações</div>
+                        </div>
+                    </div>
+                    <div class="table-body">
+                        ${orders.map(order => {
+                            const product = products.find(p => p.id === order.product);
+                            const user = loadFromLocalStorage('users', []).find(u => u.id === order.user);
+                            return `
+                                <div class="table-row">
+                                    <div class="client-info">
+                                        <div class="client-name">${user ? user.username : 'Usuário não encontrado'}</div>
+                                        <div class="client-roblox">${order.robloxUsername}</div>
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-name">${product ? product.name : 'Produto não encontrado'}</div>
+                                    </div>
+                                    <div class="price-info">
+                                        <strong>${formatCurrency(order.price)}</strong>
+                                    </div>
+                                    <div>
+                                        <span class="order-status status-${order.status}">${getOrderStatusText(order.status)}</span>
+                                    </div>
+                                    <div class="date-info">
+                                        ${formatDate(order.createdAt)}
+                                    </div>
+                                    <div class="actions-info">
+                                        <button class="btn btn-primary btn-small" onclick="openAdminChat('${order.id}', '${user ? user.username : 'Unknown'}', '${product ? product.name : 'Unknown'}')">
+                                            <i class="fas fa-comments"></i>
+                                            Chat
+                                        </button>
+                                        ${order.status !== 'delivered' ? `
+                                            <button class="btn btn-secondary btn-small" onclick="updateOrderStatus('${order.id}', 'delivered')">
+                                                <i class="fas fa-check"></i>
+                                                Entregar
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadAdminUsers() {
+            const container = document.querySelector('.admin-users');
+            const users = loadFromLocalStorage('users', []);
+            
+            if (users.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center">
+                        <p style="color: var(--text-secondary);">Nenhum usuário cadastrado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = users.map(user => `
+                <div class="order-card fade-in">
+                    <div class="order-info">
+                        <h4>${user.username}</h4>
+                        <div class="order-meta">
+                            <span><i class="fas fa-envelope"></i> ${user.email}</span>
+                            <span><i class="fas fa-gamepad"></i> ${user.robloxUsername || 'Não informado'}</span>
+                            <span><i class="fas fa-calendar"></i> ${formatDate(user.createdAt)}</span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <span class="order-status status-${user.role === 'admin' ? 'paid' : 'pending'}">
+                            ${user.role === 'admin' ? 'Admin' : 'Usuário'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateOrderStatus(orderId, newStatus) {
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = newStatus;
+                if (newStatus === 'delivered') {
+                    orders[orderIndex].deliveredAt = new Date().toISOString();
+                }
+                saveToLocalStorage('orders', orders);
+                loadAdminOrders();
+                showNotification('Status do pedido atualizado!', 'success');
+            }
+        }
+        
+        function handleAddProduct(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('newProductName').value;
+            const description = document.getElementById('newProductDescription').value;
+            const image = document.getElementById('newProductImage').value;
+            const price = parseFloat(document.getElementById('newProductPrice').value);
+            const category = document.getElementById('newProductCategory').value;
+            const robloxId = document.getElementById('newProductRobloxId').value;
+            
+            const newProduct = {
+                id: 'prod' + Date.now(),
+                name,
+                description,
+                image,
+                price,
+                category,
+                robloxId,
+                isActive: true,
+                createdAt: new Date().toISOString()
+            };
+            
+            products.push(newProduct);
+            saveToLocalStorage('products', products);
+            
+            closeModal('addProductModal');
+            
+            // Reset form
+            document.getElementById('addProductForm').reset();
+            
+            // Refresh products display
+            filteredProducts = products;
+            renderProducts();
+            
+            // Refresh stats
+            refreshStats();
+            
+            showNotification('Produto adicionado com sucesso!', 'success');
+        }
+        
+        // ============ SISTEMA DE CHAT ============
+        function openChatWithOrder(order) {
+            currentChatRoom = 'order_' + order.id;
+            currentOrder = order;
+            
+            // Carregar mensagens do chat
+            loadChatMessages();
+            
+            // Mostrar botão de chat se estiver oculto
+            const chatButton = document.getElementById('chatButton');
+            chatButton.style.display = 'flex';
+            
+            // Abrir modal do chat
+            openChatModal();
+            
+            // Adicionar mensagem automática do admin
+            setTimeout(() => {
+                addMessageToChat('admin', `Olá! Vi seu pagamento para o produto "${products.find(p => p.id === order.product)?.name}". Estou processando seu pedido e em breve farei a entrega no Roblox. Seu usuário Roblox é: ${order.robloxUsername}, correto?`);
+            }, 1000);
+        }
+        
+        function openChatModal() {
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.add('active');
+            
+            // Limpar notificações não lidas
+            unreadMessages = 0;
+            updateChatBadge();
+            
+            // Focar no input
+            setTimeout(() => {
+                document.getElementById('chatInput').focus();
+            }, 300);
+        }
+        
+        function closeChatModal() {
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.remove('active');
+        }
+        
+        function loadChatMessages() {
+            if (!currentChatRoom) return;
+            
+            // Carregar mensagens do localStorage
+            const allMessages = loadFromLocalStorage('chatMessages', []);
+            chatMessages = allMessages.filter(msg => msg.roomId === currentChatRoom);
+            
+            // Renderizar mensagens
+            renderChatMessages();
+        }
+        
+        function renderChatMessages() {
+            const chatMessagesContainer = document.getElementById('chatMessages');
+            
+            if (chatMessages.length === 0) {
+                chatMessagesContainer.innerHTML = `
+                    <div class="text-center" style="color: var(--text-muted); margin-top: 2rem;">
+                        <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>Nenhuma mensagem ainda</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            chatMessagesContainer.innerHTML = chatMessages.map(msg => `
+                <div class="message ${msg.senderRole}">
+                    <div>${msg.content}</div>
+                    <div class="message-info">${msg.sender} - ${formatDate(msg.timestamp)}</div>
+                </div>
+            `).join('');
+            
+            // Scroll para o final
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message || !currentUser || !currentChatRoom) return;
+            
+            // Criar mensagem
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                roomId: currentChatRoom,
+                content: message,
+                sender: currentUser.username,
+                senderId: currentUser.id,
+                senderRole: 'user',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Salvar mensagem
+            const allMessages = loadFromLocalStorage('chatMessages', []);
+            allMessages.push(newMessage);
+            saveToLocalStorage('chatMessages', allMessages);
+            
+            // Adicionar ao chat atual
+            chatMessages.push(newMessage);
+            
+            // Renderizar
+            renderChatMessages();
+            
+            // Limpar input
+            chatInput.value = '';
+            
+            // Simular resposta do admin após alguns segundos
+            if (currentOrder) {
+                setTimeout(() => {
+                    const adminResponses = [
+                        'Entendi! Já estou verificando seu pedido.',
+                        'Perfeito! Em alguns minutos vou entregar seu item.',
+                        'Ótimo! Seu pagamento foi confirmado, preparando a entrega.',
+                        'Recebido! Já estou acessando o Roblox para fazer a entrega.'
+                    ];
+                    const randomResponse = adminResponses[Math.floor(Math.random() * adminResponses.length)];
+                    addMessageToChat('admin', randomResponse);
+                }, 2000 + Math.random() * 3000);
+            }
+        }
+        
+        function addMessageToChat(senderRole, content) {
+            if (!currentChatRoom) return;
+            
+            const senderName = senderRole === 'admin' ? 'Admin' : (currentUser?.username || 'Usuário');
+            
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                roomId: currentChatRoom,
+                content: content,
+                sender: senderName,
+                senderId: senderRole === 'admin' ? 'admin123' : (currentUser?.id || 'unknown'),
+                senderRole: senderRole,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Salvar mensagem
+            const allMessages = loadFromLocalStorage('chatMessages', []);
+            allMessages.push(newMessage);
+            saveToLocalStorage('chatMessages', allMessages);
+            
+            // Adicionar ao chat atual
+            chatMessages.push(newMessage);
+            
+            // Renderizar
+            renderChatMessages();
+            
+            // Se for mensagem do admin e o chat estiver fechado, mostrar notificação
+            if (senderRole === 'admin' && !document.getElementById('chatModal').classList.contains('active')) {
+                unreadMessages++;
+                updateChatBadge();
+                showNotification('Nova mensagem do admin!', 'info');
+            }
+        }
+        
+        function updateChatBadge() {
+            const chatBadge = document.getElementById('chatBadge');
+            if (unreadMessages > 0) {
+                chatBadge.textContent = unreadMessages > 9 ? '9+' : unreadMessages;
+                chatBadge.style.display = 'flex';
+            } else {
+                chatBadge.style.display = 'none';
+            }
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // ============ CHAT ADMIN-CLIENTE ============
+        function openAdminChat(orderId, clientName, productName) {
+            currentChatRoom = 'order_' + orderId;
+            currentOrder = orders.find(o => o.id === orderId);
+            
+            // Carregar mensagens do chat
+            loadChatMessages();
+            
+            // Mostrar botão de chat se estiver oculto
+            const chatButton = document.getElementById('chatButton');
+            chatButton.style.display = 'flex';
+            
+            // Abrir modal do chat
+            openChatModal();
+            
+            // Atualizar header do chat para mostrar info do cliente
+            const chatHeader = document.querySelector('.chat-header h3');
+            chatHeader.textContent = `Chat com ${clientName}`;
+            
+            // Adicionar mensagem inicial se não existir mensagens
+            if (chatMessages.length === 0) {
+                setTimeout(() => {
+                    addMessageToChat('admin', `Olá ${clientName}! Vi seu interesse no produto "${productName}". Como posso ajudar?`);
+                }, 500);
+            }
+        }
+        
+        // Modificar sendMessage para funcionar tanto para admin quanto cliente
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message || !currentUser || !currentChatRoom) return;
+            
+            // Determinar o papel do remetente
+            const senderRole = currentUser.role === 'admin' ? 'admin' : 'user';
+            
+            // Criar mensagem
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                roomId: currentChatRoom,
+                content: message,
+                sender: currentUser.username,
+                senderId: currentUser.id,
+                senderRole: senderRole,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Salvar mensagem
+            const allMessages = loadFromLocalStorage('chatMessages', []);
+            allMessages.push(newMessage);
+            saveToLocalStorage('chatMessages', allMessages);
+            
+            // Adicionar ao chat atual
+            chatMessages.push(newMessage);
+            
+            // Renderizar
+            renderChatMessages();
+            
+            // Limpar input
+            chatInput.value = '';
+            
+            // Se for cliente, simular resposta do admin
+            if (senderRole === 'user' && currentOrder) {
+                setTimeout(() => {
+                    const adminResponses = [
+                        'Entendi! Já estou verificando seu pedido.',
+                        'Perfeito! Em alguns minutos vou entregar seu item.',
+                        'Ótimo! Seu pagamento foi confirmado, preparando a entrega.',
+                        'Recebido! Já estou acessando o Roblox para fazer a entrega.',
+                        'Claro! Vou verificar isso para você.',
+                        'Sem problemas! Já estou processando.'
+                    ];
+                    const randomResponse = adminResponses[Math.floor(Math.random() * adminResponses.length)];
+                    addMessageToChat('admin', randomResponse);
+                }, 2000 + Math.random() * 3000);
+            }
+            
+            // Se for admin, simular resposta do cliente (apenas para demonstração)
+            if (senderRole === 'admin' && currentOrder) {
+                setTimeout(() => {
+                    const clientResponses = [
+                        'Obrigado! Pode me ajudar com a entrega?',
+                        'Perfeito! Estou aguardando no Roblox.',
+                        'Ótimo! Meu usuário está correto.',
+                        'Entendido! Obrigado pelo suporte.',
+                        'Ok! Fico no aguardo então.'
+                    ];
+                    const randomResponse = clientResponses[Math.floor(Math.random() * clientResponses.length)];
+                    addMessageToChat('user', randomResponse);
+                }, 1500 + Math.random() * 2000);
+            }
+        }
+        
+        // ============ NAVEGAÇÃO ============
+        function navigateTo(page) {
+            if (!currentUser && page !== 'home' && page !== 'products') {
+                showNotification('Faça login para acessar esta página', 'warning');
+                showLoginModal();
+                return;
+            }
+            
+            if (page === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
+                showNotification('Acesso negado', 'error');
+                return;
+            }
+            
+            // Hide all sections
+            document.querySelectorAll('main section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(page);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('fade-in');
+            }
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${page}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Load page-specific data
+            if (page === 'products') {
+                loadProducts();
+            } else if (page === 'orders') {
+                loadOrders();
+            } else if (page === 'admin') {
+                refreshStats();
+                switchAdminTab('products');
+            }
+        }
+        
+        // ============ MODAIS ============
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function showLoginModal() {
+            showModal('loginModal');
+        }
+        
+        function showRegisterModal() {
+            closeModal('loginModal');
+            showModal('registerModal');
+        }
+        
+        function showAddProductModal() {
+            showModal('addProductModal');
+        }
+        
+        // ============ FUNÇÕES GLOBAIS ============
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showHowItWorks() {
+            alert('Como Funciona:\n\n1. Escolha um produto\n2. Informe seu usuário Roblox\n3. Pague via PIX\n4. Confirme o pagamento\n5. Aguarde a entrega manual do admin');
+        }
+        
+        // ============ INICIALIZAÇÃO ============
+        document.addEventListener('DOMContentLoaded', () => {
+            // Close modal on outside click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Initialize
+            checkAuth();
+            loadProducts();
+            
+            // Check URL hash
+            const hash = window.location.hash.substring(1);
+            if (hash && ['home', 'products', 'orders', 'admin'].includes(hash)) {
+                navigateTo(hash);
+            }
+        });
+        
+        // Make functions global
+        window.navigateTo = navigateTo;
+        window.scrollToProducts = scrollToProducts;
+        window.showHowItWorks = showHowItWorks;
+        window.showLoginModal = showLoginModal;
+        window.showRegisterModal = showRegisterModal;
+        window.showAddProductModal = showAddProductModal;
+        window.closeModal = closeModal;
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+        window.logout = logout;
+        window.showProductDetails = showProductDetails;
+        window.handlePurchase = handlePurchase;
+        window.sendPixProof = sendPixProof;
+        window.filterProducts = filterProducts;
+        window.sortProducts = sortProducts;
+        window.handleSearch = handleSearch;
+        window.refreshStats = refreshStats;
+        window.switchAdminTab = switchAdminTab;
+        window.handleAddProduct = handleAddProduct;
+        window.updateOrderStatus = updateOrderStatus;
+        window.openChatModal = openChatModal;
+        window.closeChatModal = closeChatModal;
+        window.sendMessage = sendMessage;
+        window.handleChatKeyPress = handleChatKeyPress;
+        window.openAdminChat = openAdminChat;
+    </script>
+</body>
+</html>
