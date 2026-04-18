@@ -1795,11 +1795,13 @@
         appId: "1:1081080082108:web:59de6bf7a7b8000c952ab9"
       };
 
+      console.log('Firebase Config:', firebaseConfig);
+
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      console.log('Firebase inicializado com sucesso!');
+      console.log('Firebase Inicializado com Sucesso!');
       console.log('Auth:', auth);
       console.log('DB:', db);
 
